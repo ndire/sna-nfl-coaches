@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 \usepackage[T1]{fontenc}
 
 \usepackage{fullpage}
@@ -71,7 +71,7 @@ the listed coaching staff.  For example, this page
 \url{http://www.pro-football-reference.com/teams/det/2010.htm} lists the
 coaches for the 2010 Detroit Lions.  The team page generally lists the head
 coach, offensive coordinator, and defensive coordinator.  Only the years
-1980-2013 were considered.
+1980-2013 were considered.  The code used to produce this data is available at \cite{scraper}.
 
 \subsection{Network Construction}
 
@@ -131,17 +131,20 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 library(igraph)
 @
 
-<<tree_prop>>=
+<<tree_prop, fig.height=4, fig.width=4, fig.align="center">>=
 tree_g = read.graph("coaches_tree.gml",format="gml")
 summary(tree_g)
 
-degree(tree_g, mode="all") 
-degree.distribution(tree_g, cumulative = FALSE)
+tree_deg = degree.distribution(tree_g, cumulative = TRUE)
+plot(tree_deg,log="xy",xlab="degree k",ylab="P(x) >= k",cex=0.5)
 @
 
-<<peer_prop>>=
+<<peer_prop, , fig.height=4, fig.width=4, fig.align="center">>=
 peer_g = read.graph("coaches_peer.gml",format="gml")
 summary(peer_g)
+
+peer_deg = degree.distribution(tree_g, cumulative = TRUE)
+plot(peer_deg,log="xy",xlab="degree k",ylab="P(x) >= k",cex=0.5)
 @
 
 \section{Centrality}
@@ -152,17 +155,9 @@ summary(peer_g)
 
 \section{Conclusion}
 
-Here is a code chunk.
+This report analyzed the social network of NFL coaches serving as head coach or
+coorindator in the years 1980-2013.
 
-%<<foo, fig.height=4>>=
-%1+1
-%letters
-%chartr('xie', 'XIE', c('xie yihui', 'Yihui Xie'))
-%par(mar=c(4, 4, .2, .2)); plot(rnorm(100))
-%@
-%
-%You can also write inline expressions, e.g. $\pi=\Sexpr{pi}$, and \Sexpr{1.598673e8} is a big number.
-%
 \begin{thebibliography}{99}
 
 \bibitem{mobility1} Harrison, C.K. \& Associates (2013). Coaching Mobility (Volume I in the Good Business Series). A Report for the NFL Diversity and Inclusion Series.
@@ -170,6 +165,8 @@ Here is a code chunk.
 \bibitem{mobility3} Harrison, C.K. \& Bukstein, S. (2014). NFL Occupational Mobility Patterns (Volume III). A report for the NFL Diversity and Inclusion “Good Business” Series.
 
 \bibitem{forbes-pay}  \url{http://www.forbes.com/sites/chrissmith/2013/05/22/the-highest-paid-coaches-in-us-sports/}
+
+\bibitem{scraper} \url{https://github.com/ndire/pfr-scraper}
 
 \end{thebibliography}
 

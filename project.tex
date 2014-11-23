@@ -1,4 +1,4 @@
-\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+\documentclass[11pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -120,7 +120,7 @@ the listed coaching staff.  For example, this page
 \url{http://www.pro-football-reference.com/teams/det/2010.htm} lists the
 coaches for the 2010 Detroit Lions.  The team page generally lists the head
 coach, offensive coordinator, and defensive coordinator.  Only the years
-1980-2013 were considered.
+1980-2013 were considered.  The code used to produce this data is available at \cite{scraper}.
 
 \subsection{Network Construction}
 
@@ -185,45 +185,21 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 \hlkwd{summary}\hlstd{(tree_g)}
 \end{alltt}
 \begin{verbatim}
-## IGRAPH U--- 427 1209 -- 
+## IGRAPH U--- 427 777 -- 
 ## attr: href (v/c), guid (v/c), label (v/c), id (v/n), value (e/n)
 \end{verbatim}
 \begin{alltt}
-\hlkwd{degree}\hlstd{(tree_g,} \hlkwc{mode}\hlstd{=}\hlstr{"all"}\hlstd{)}
+\hlstd{tree_deg} \hlkwb{=} \hlkwd{degree.distribution}\hlstd{(tree_g,} \hlkwc{cumulative} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{plot}\hlstd{(tree_deg,}\hlkwc{log}\hlstd{=}\hlstr{"xy"}\hlstd{,}\hlkwc{xlab}\hlstd{=}\hlstr{"degree k"}\hlstd{,}\hlkwc{ylab}\hlstd{=}\hlstr{"P(x) >= k"}\hlstd{,}\hlkwc{cex}\hlstd{=}\hlnum{0.5}\hlstd{)}
 \end{alltt}
-\begin{verbatim}
-##   [1]  5  6  2 11  7 10  3  4  1  1  1  3  3 18  5  3  6  6  7  4  8  7  4
-##  [24]  4  7 12  6 10  2  3 11 11  5  8  2 13  2  7  2  9  4  4  3  7  9  3
-##  [47]  2  3  5  9  3  2 13  4  2  2  2  4  9 11  3  2  4  2  3  1  2  5  5
-##  [70]  8  9  4 16  2 25  4  9  8  6  2  6 11  6  3  1  4  1 16  4 14  3  1
-##  [93]  3 11 14  4  2 18 12  2  2 12  1 12 12  4  2  2  1  2  2  2  6  8  7
-## [116]  2  9  1 16 12 12  2  5  7 14  2  2  5  5  8  8  5 11  3  1  9  2  9
-## [139]  5  4  2  5  2  4  2  2  1  5  7  6  4  2 13 12 11  7  2 15  3  8  6
-## [162]  7  2  2 13  3 13  4  2  4  7 10  8  6  5  8  2  2  2  6  4 18  3  9
-## [185]  5  3  3 10  5  3 14 12  2 11 15  9  3  2  6 13  3  2  5 17 10 10  7
-## [208]  7  9  7  6  3 13  3 15  3  2  2 10  7  2 12 10  5  2 11  3 10  4  8
-## [231] 16  1  4  4  6 11  8  4  9  3  7  5  4 12 14  8  9 11 13  6  2  3  3
-## [254]  9  2  2  2 10  7  7 10 12  7  4  7 11  9 11  7  2 10  7  2  4  7 11
-## [277]  5  2  8  5  5  2  7 10  7 10  6  4  4  4  2  3  7  9  8  9  5  2  2
-## [300]  2  4  4 10  9  7  9  8  2 13  4  1  4  8  2  9  2  3 11  5  9  6  5
-## [323]  7  4  8  2  3  2  5  2  5  2  5  9 12  8  2  2  2  6  2  6  3  4  2
-## [346]  2  7  2  4  7  4  6  2  9  2  6  2  5  6  7  2  2  2  5  2  6  4  7
-## [369]  9  5  3  6  4  6  2 11  4  5  8  6  5  4  4  2  2  6  3  5  6  3  3
-## [392]  2  6  4  6  3  3  2  7  3  2  2  1  6  5  2  5  2  2  2  4  2  2  2
-## [415]  2  2  2  4  2  2  2  2  2  2  2  2  2
-\end{verbatim}
-\begin{alltt}
-\hlkwd{degree.distribution}\hlstd{(tree_g,} \hlkwc{cumulative} \hlstd{=} \hlnum{FALSE}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-##  [1] 0.000000000 0.035128806 0.248243560 0.096018735 0.110070258
-##  [6] 0.084309133 0.074941452 0.079625293 0.046838407 0.058548009
-## [11] 0.035128806 0.039812646 0.030444965 0.021077283 0.011709602
-## [16] 0.007025761 0.009367681 0.002341920 0.007025761 0.000000000
-## [21] 0.000000000 0.000000000 0.000000000 0.000000000 0.000000000
-## [26] 0.002341920
-\end{verbatim}
 \end{kframe}
+
+{\centering \includegraphics[width=\maxwidth]{figure/tree_prop-1} 
+
+}
+
+
+
 \end{knitrout}
 
 \begin{knitrout}
@@ -233,10 +209,16 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 \hlkwd{summary}\hlstd{(peer_g)}
 \end{alltt}
 \begin{verbatim}
-## IGRAPH U--- 427 1209 -- 
+## IGRAPH U--- 427 1244 -- 
 ## attr: href (v/c), guid (v/c), label (v/c), id (v/n), value (e/n)
 \end{verbatim}
+\begin{alltt}
+\hlstd{peer_deg} \hlkwb{=} \hlkwd{degree.distribution}\hlstd{(tree_g,} \hlkwc{cumulative} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\hlkwd{plot}\hlstd{(peer_deg,}\hlkwc{log}\hlstd{=}\hlstr{"xy"}\hlstd{,}\hlkwc{xlab}\hlstd{=}\hlstr{"degree k"}\hlstd{,}\hlkwc{ylab}\hlstd{=}\hlstr{"P(x) >= k"}\hlstd{,}\hlkwc{cex}\hlstd{=}\hlnum{0.5}\hlstd{)}
+\end{alltt}
 \end{kframe}
+\includegraphics[width=\maxwidth,height=4in]{figure/peer_prop-1} 
+
 \end{knitrout}
 
 \section{Centrality}
@@ -265,6 +247,8 @@ Here is a code chunk.
 \bibitem{mobility3} Harrison, C.K. \& Bukstein, S. (2014). NFL Occupational Mobility Patterns (Volume III). A report for the NFL Diversity and Inclusion “Good Business” Series.
 
 \bibitem{forbes-pay}  \url{http://www.forbes.com/sites/chrissmith/2013/05/22/the-highest-paid-coaches-in-us-sports/}
+
+\bibitem{scraper} \url{https://github.com/ndire/pfr-scraper}
 
 \end{thebibliography}
 
