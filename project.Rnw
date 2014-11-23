@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{graphicx}
+%\usepackage{underscore}
+
+
+%
+% Obtaining data (8 points total): 
+% 2 pts: documentation of how data was obtained (newly assembled or existing
+% data) + source code if applicable
+% 2 pts: explanation of criteria for inclusion of nodes and edges
+% 4 pts: subjective interestingness/originality of the subject of data collection
+%
+% Data analysis (17 points total):
+% 3 pts: were at least 3 metrics/methods from the course applied to the data?
+% 4 pts: were they applied/interpreted appropriately?
+% 2 pts: was at least one additional technique, not covered in the course
+% materials, applied to the data?
+% 5pts Visualization: Did the visualization add to your comprehension of the data?
+% 3 pts: was code/step by step instructions provided such that one could
+% replicate the methods?
+%
+% Interpretation (5 points): 
+% 2pts: were limitations of the data correctly addressed?
+% 3pts: did the analysis yield new insights (subjective)
+%
+
+\begin{document}
+
+\title{Social Network Analysis of NFL Coaches, 1980-2013}
+\author{Nathan E Dire}
+\date{November 2014}
+\maketitle
+
+\section{Introduction}
+
+Coaching in the United States' National Football League is a high stakes
+business.  NFL coaches domainate the top paid coaches in U.S. sports
+\cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per year.
+
+The group of NFL coaches is a relatively tight circle.  Head coaches are often
+hired from the pool of offensive and defensive coordinators.  
+
+The There is general perception that influential coaches pass on their knowledge to
+assistants, who then become successful head coaches themselves.
+\begin{figure}
+\begin{center}
+\includegraphics[width=\textwidth]{walsh_network.png}
+\end{center}
+\caption{Image: The Bill Walsh Coaching Tree. Source:
+\url{http://blog.hubspot.com/marketing/paypal-mafia-bill-walsh-nfl-infographic}}
+\label{fig-bill-walsh}
+\end{figure}
+
+This report considers a few main questions about NFL coaches who have worked
+together.  First, does centrality in the social network align with overall
+coaching success?  Are there communities in the network?  Small world
+characteristics?
+
+\section{Methodology}
+
+\subsection{Data Acquisition}
+
+Data on NFL coaching staffs was gathered from the site
+\url{http://www.pro-football-reference.org} by reading the pages and parsing
+the listed coaching staff.  For example, this page
+\url{http://www.pro-football-reference.com/teams/det/2010.htm} lists the
+coaches for the 2010 Detroit Lions.  The team page generally lists the head
+coach, offensive coordinator, and defensive coordinator.  Only the years
+1980-2013 were considered.
+
+\subsection{Network Construction}
+
+The relationship between members of the coaching staff is subject to
+interpretation.  Within this data, the coach may be both a coordinator and head
+coach.  
+
+For this analysis, I consider two constructions of the social network:
+\begin{enumerate}
+
+\item The first model attempts to follow the ``coaching family tree''
+perception, and only has directed edges from head coach to coordinator.  This
+approach attempts to model the influence of successful coaches through the
+success of their assistants.  Edges are between the head coach and the
+coordinators; coordinators have no connection to each other.  This model will
+be referred to as the \emph{tree} model.  The file is {\tt coaches\_tree.gml}.
+
+\item The second model considers each member of the staff to be connected with
+every coach they served with, with increasing weight for each year served.
+This approach attempts to identify coaching ``communities'' who may tend serve
+together.  This model will be referred to as the \emph{peer} model.  The file
+is {\tt coaches\_peer.gml}.
+
+\end{enumerate}
+
+\subsection{Analysis}
+
+Network analysis is done in the R programming language with the {\tt igraph}
+package.  The calculations are included in this document using the {\tt knitr}
+package.
+
+\subsection{Limitations}
+
+There are several important limitations of this anlaysis:
+
+\begin{itemize}
+
+\item Only the head coach and coordinators are considered.  This represents the
+only clean data available from \url{http://pro-football-reference.com}.  It
+also avoids the complexities resulting from teams having different names for
+the various position coaches.  This has the downside of not recognizing cases
+where head coaches and coordinators take jobs as position coaches.
+
+\item Only the years 1980-2013 are considered.  The consistent reporting of
+offensive and defensive coordinators appears to start around 1980.  This
+results in the network being truncated for coaches employed before and after
+1980.
+
+\item Coaches are considered to serve the entire year.  In reality, teams may
+occasionally fire coaches mid-year, and coaches may take a leave of absence.
+
+\end{itemize}
+
+\section{Network Properties}
+
+<<libs, include=FALSE>>=
+library(igraph)
+@
+
+<<tree_prop>>=
+tree_g = read.graph("coaches_tree.gml",format="gml")
+summary(tree_g)
+
+degree(tree_g, mode="all") 
+degree.distribution(tree_g, cumulative = FALSE)
+@
+
+<<peer_prop>>=
+peer_g = read.graph("coaches_peer.gml",format="gml")
+summary(peer_g)
+@
+
+\section{Centrality}
+
+\section{Community Structure}
+
+\section{Small World Network Properties}
+
+\section{Conclusion}
+
+Here is a code chunk.
+
+%<<foo, fig.height=4>>=
+%1+1
+%letters
+%chartr('xie', 'XIE', c('xie yihui', 'Yihui Xie'))
+%par(mar=c(4, 4, .2, .2)); plot(rnorm(100))
+%@
+%
+%You can also write inline expressions, e.g. $\pi=\Sexpr{pi}$, and \Sexpr{1.598673e8} is a big number.
+%
+\begin{thebibliography}{99}
+
+\bibitem{mobility1} Harrison, C.K. \& Associates (2013). Coaching Mobility (Volume I in the Good Business Series). A Report for the NFL Diversity and Inclusion Series.
+
+\bibitem{mobility3} Harrison, C.K. \& Bukstein, S. (2014). NFL Occupational Mobility Patterns (Volume III). A report for the NFL Diversity and Inclusion “Good Business” Series.
+
+\bibitem{forbes-pay}  \url{http://www.forbes.com/sites/chrissmith/2013/05/22/the-highest-paid-coaches-in-us-sports/}
+
+\end{thebibliography}
+
+\end{document}
