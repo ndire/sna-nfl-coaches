@@ -40,13 +40,18 @@
 
 Coaching in the United States' National Football League is a high stakes
 business.  NFL coaches domainate the top paid coaches in U.S. sports
-\cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per year.
+\cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per
+year.
 
 The group of NFL coaches is a relatively tight circle.  Head coaches are often
 hired from the pool of offensive and defensive coordinators.  
 
-The There is general perception that influential coaches pass on their knowledge to
-assistants, who then become successful head coaches themselves.
+The There is general perception that influential coaches pass on their
+knowledge to assistants, who then become successful head coaches themselves.
+This is typically associated wiht a particular philosophy, such as the ``west
+coast offense'' or the 3-4 defense.  Figure \ref{fig-bill-walsh} shows the
+coaching family tree for Bill Walsh, a successful coach from the 1980s.
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{walsh_network.png}
@@ -149,14 +154,38 @@ plot(peer_deg,log="xy",xlab="degree k",ylab="P(x) >= k",cex=0.5)
 
 \section{Centrality}
 
+\subsection{Degree}
+
+\subsection{Betweenness}
+
+<<tree_cent>>=
+bb = betweenness.estimate(tree_g, v=V(tree_g), directed=FALSE, cutoff=16)
+@
+
+<<peer_cent>>=
+bb = betweenness.estimate(peer_g, v=V(peer_g), directed=FALSE, cutoff=16)
+@
+
+\subsection{Closeness}
+
 \section{Community Structure}
 
+% k-core
+
+% fastgreedy
+
 \section{Small World Network Properties}
+
+% cluster coeffient
+
+% Avg shortest path
 
 \section{Conclusion}
 
 This report analyzed the social network of NFL coaches serving as head coach or
 coorindator in the years 1980-2013.
+
+The content used to generate this report can be found at \cite{project}.
 
 \begin{thebibliography}{99}
 
@@ -167,6 +196,8 @@ coorindator in the years 1980-2013.
 \bibitem{forbes-pay}  \url{http://www.forbes.com/sites/chrissmith/2013/05/22/the-highest-paid-coaches-in-us-sports/}
 
 \bibitem{scraper} \url{https://github.com/ndire/pfr-scraper}
+
+\bibitem{project} \url{https://github.com/ndire/sna-nfl-coaches}
 
 \end{thebibliography}
 

@@ -217,29 +217,58 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 \hlkwd{plot}\hlstd{(peer_deg,}\hlkwc{log}\hlstd{=}\hlstr{"xy"}\hlstd{,}\hlkwc{xlab}\hlstd{=}\hlstr{"degree k"}\hlstd{,}\hlkwc{ylab}\hlstd{=}\hlstr{"P(x) >= k"}\hlstd{,}\hlkwc{cex}\hlstd{=}\hlnum{0.5}\hlstd{)}
 \end{alltt}
 \end{kframe}
-\includegraphics[width=\maxwidth,height=4in]{figure/peer_prop-1} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/peer_prop__-1} 
+
+}
+
+
 
 \end{knitrout}
 
 \section{Centrality}
 
+\subsection{Degree}
+
+\subsection{Betweenness}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{bb} \hlkwb{=} \hlkwd{betweenness.estimate}\hlstd{(tree_g,} \hlkwc{v}\hlstd{=}\hlkwd{V}\hlstd{(tree_g),} \hlkwc{directed}\hlstd{=}\hlnum{FALSE}\hlstd{,} \hlkwc{cutoff}\hlstd{=}\hlnum{16}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{bb} \hlkwb{=} \hlkwd{betweenness.estimate}\hlstd{(peer_g,} \hlkwc{v}\hlstd{=}\hlkwd{V}\hlstd{(peer_g),} \hlkwc{directed}\hlstd{=}\hlnum{FALSE}\hlstd{,} \hlkwc{cutoff}\hlstd{=}\hlnum{16}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Closeness}
+
 \section{Community Structure}
+
+% k-core
+
+% fastgreedy
 
 \section{Small World Network Properties}
 
+% cluster coeffient
+
+% Avg shortest path
+
 \section{Conclusion}
 
-Here is a code chunk.
+This report analyzed the social network of NFL coaches serving as head coach or
+coorindator in the years 1980-2013.
 
-%<<foo, fig.height=4>>=
-%1+1
-%letters
-%chartr('xie', 'XIE', c('xie yihui', 'Yihui Xie'))
-%par(mar=c(4, 4, .2, .2)); plot(rnorm(100))
-%@
-%
-%You can also write inline expressions, e.g. $\pi=pi$, and 1.598673e8 is a big number.
-%
+The content used to generate this report can be found at \cite{project}.
+
 \begin{thebibliography}{99}
 
 \bibitem{mobility1} Harrison, C.K. \& Associates (2013). Coaching Mobility (Volume I in the Good Business Series). A Report for the NFL Diversity and Inclusion Series.
@@ -249,6 +278,8 @@ Here is a code chunk.
 \bibitem{forbes-pay}  \url{http://www.forbes.com/sites/chrissmith/2013/05/22/the-highest-paid-coaches-in-us-sports/}
 
 \bibitem{scraper} \url{https://github.com/ndire/pfr-scraper}
+
+\bibitem{project} \url{https://github.com/ndire/sna-nfl-coaches}
 
 \end{thebibliography}
 
