@@ -57,6 +57,8 @@
 %\usepackage{underscore}
 
 
+
+
 %
 % Obtaining data (8 points total): 
 % 2 pts: documentation of how data was obtained (newly assembled or existing
@@ -88,14 +90,19 @@
 \section{Introduction}
 
 Coaching in the United States' National Football League is a high stakes
-business.  NFL coaches domainate the top paid coaches in U.S. sports
-\cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per year.
+business.  NFL coaches dominate the top paid coaches in U.S. sports
+\cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per
+year.
 
 The group of NFL coaches is a relatively tight circle.  Head coaches are often
 hired from the pool of offensive and defensive coordinators.  
 
-The There is general perception that influential coaches pass on their knowledge to
-assistants, who then become successful head coaches themselves.
+The There is general perception that influential coaches pass on their
+knowledge to assistants, who then become successful head coaches themselves.
+This is typically associated with a particular philosophy, such as the ``west
+coast offense'' or the 3-4 defense.  Figure \ref{fig-bill-walsh} shows the
+coaching family tree for Bill Walsh, a successful coach from the 1980s.
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=\textwidth]{walsh_network.png}
@@ -105,10 +112,10 @@ assistants, who then become successful head coaches themselves.
 \label{fig-bill-walsh}
 \end{figure}
 
-This report considers a few main questions about NFL coaches who have worked
+This report considers a two main questions about NFL coaches who have worked
 together.  First, does centrality in the social network align with overall
-coaching success?  Are there communities in the network?  Small world
-characteristics?
+coaching success?  Second, are there distinct communities in the network,
+perhaps aligned with some particular style or philosophy?
 
 \section{Methodology}
 
@@ -136,7 +143,9 @@ perception, and only has directed edges from head coach to coordinator.  This
 approach attempts to model the influence of successful coaches through the
 success of their assistants.  Edges are between the head coach and the
 coordinators; coordinators have no connection to each other.  This model will
-be referred to as the \emph{tree} model.  The file is {\tt coaches\_tree.gml}.
+be referred to as the \emph{tree} model.  The tree model is used for centrality
+measures since this report is looking for the centrality successful
+\emph{head} coaches.  The file is {\tt coaches\_tree.gml}.
 
 \item The second model considers each member of the staff to be connected with
 every coach they served with, with increasing weight for each year served.
@@ -152,9 +161,19 @@ Network analysis is done in the R programming language with the {\tt igraph}
 package.  The calculations are included in this document using the {\tt knitr}
 package.
 
+For centrality measurement, the validation metric is based on alignment with
+super-bowl winning coaches since this data was easy to gather.  Due to multiple
+career wins, there are only 23 super-bowl winning coaches since 1980.  Ideally
+the evaluation should be based on a more continuous metric applicable to all
+coaches, such as win percentage, which can be used to calculate correlation.
+
+For community finding, it's difficult to pick a validation metric.  The main
+evaluation metric is subjective based on the infographic in figure
+\ref{fig-bill-walsh}.
+
 \subsection{Limitations}
 
-There are several important limitations of this anlaysis:
+There are several important limitations of this analysis:
 
 \begin{itemize}
 
@@ -172,11 +191,21 @@ results in the network being truncated for coaches employed before and after
 \item Coaches are considered to serve the entire year.  In reality, teams may
 occasionally fire coaches mid-year, and coaches may take a leave of absence.
 
+
 \end{itemize}
 
 \section{Network Properties}
 
+The network includes 427 nodes.  The tree model has 777 edges; the peer model
+has 1244.  In both networks, the possible number of edges is constrained due to
+the realities of the coaching profession.  It's nearly impossible for a node to
+have 0 edges since no coach serves all three roles.  The maximum degree is also
+relatively limited due to coaching careers being finite.  It's rare for a head
+coach or coordinator to be under 30 or over 70.
 
+
+
+The degree distribution for the tree model is calculated as follows and shown in figure \ref{fig:tree-prop}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -192,15 +221,20 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 \hlstd{tree_deg} \hlkwb{=} \hlkwd{degree.distribution}\hlstd{(tree_g,} \hlkwc{cumulative} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \hlkwd{plot}\hlstd{(tree_deg,}\hlkwc{log}\hlstd{=}\hlstr{"xy"}\hlstd{,}\hlkwc{xlab}\hlstd{=}\hlstr{"degree k"}\hlstd{,}\hlkwc{ylab}\hlstd{=}\hlstr{"P(x) >= k"}\hlstd{,}\hlkwc{cex}\hlstd{=}\hlnum{0.5}\hlstd{)}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}
 
-{\centering \includegraphics[width=\maxwidth]{figure/tree_prop-1} 
+{\centering \includegraphics[width=\maxwidth]{figure/tree-prop-1} 
 
 }
 
+\caption[Cumulative degree distribution for tree model]{Cumulative degree distribution for tree model\label{fig:tree-prop}}
+\end{figure}
 
 
 \end{knitrout}
+
+The degree distribution for the peer model is calculated as follows and shown
+in figure \ref{fig:tree-prop}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -218,7 +252,7 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 \end{alltt}
 \end{kframe}
 
-{\centering \includegraphics[width=\maxwidth]{figure/peer_prop__-1} 
+{\centering \includegraphics[width=\maxwidth]{figure/peer-prop-1} 
 
 }
 
@@ -226,46 +260,207 @@ occasionally fire coaches mid-year, and coaches may take a leave of absence.
 
 \end{knitrout}
 
+XXX
+
+A Fruchterman-Reingold layout of the tree graph is show in figure
+\ref{fig:graph-plot}.  There graph appears tightly clustered in general, without
+an obvious community structure.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot.igraph}\hlstd{(tree_g,} \hlkwc{layout}\hlstd{=layout.fruchterman.reingold,} \hlkwc{vertex.label}\hlstd{=}\hlnum{NA}\hlstd{,} \hlkwc{vertex.size}\hlstd{=}\hlnum{4}\hlstd{)}
+\end{alltt}
+\end{kframe}\begin{figure}
+
+{\centering \includegraphics[width=\maxwidth]{figure/graph-plot-1} 
+
+}
+
+\caption[Visualization of the tree model]{Visualization of the tree model\label{fig:graph-plot}}
+\end{figure}
+
+
+\end{knitrout}
+
 \section{Centrality}
+
+There are several measures of centrality; it's unclear which is most useful for
+this network.  This section considers \emph{betweenness}, \emph{closeness},
+\emph{page rank}, and \emph{authority}.  The tree model is used in order to
+stress the influence of the head coach.
 
 \subsection{Degree}
 
+The simplest centrality measure is degree centrality.  The following snippet
+selects the top 20 nodes by degree:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{td} \hlkwb{=} \hlkwd{degree}\hlstd{(tree_g)}
+\hlstd{top} \hlkwb{=} \hlkwd{V}\hlstd{(tree_g)}\hlopt{$}\hlstd{label[}\hlkwd{order}\hlstd{(td,} \hlkwc{decreasing}\hlstd{=}\hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{20}\hlstd{]]}
+\hlkwd{intersect}\hlstd{(top, sb_winners)}
+\end{alltt}
+\begin{verbatim}
+## [1] "Mike Shanahan"  "Mike Holmgren"  "Pete Carroll"   "Tom Coughlin"  
+## [5] "George Seifert" "Bill Belichick" "Tony Dungy"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+There are 7 Super Bowl winners in the top 20 nodes by degree centrality.
+
 \subsection{Betweenness}
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{bb} \hlkwb{=} \hlkwd{betweenness.estimate}\hlstd{(tree_g,} \hlkwc{v}\hlstd{=}\hlkwd{V}\hlstd{(tree_g),} \hlkwc{directed}\hlstd{=}\hlnum{FALSE}\hlstd{,} \hlkwc{cutoff}\hlstd{=}\hlnum{16}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+The first measure of centrality to be evaluated is betweenness, which measures
+how many shortest paths traverse the node.  The following snippet calculates
+betweenness for all nodes in the tree model and selects the 20 nodes with the
+top betweenness.  
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{bb} \hlkwb{=} \hlkwd{betweenness.estimate}\hlstd{(peer_g,} \hlkwc{v}\hlstd{=}\hlkwd{V}\hlstd{(peer_g),} \hlkwc{directed}\hlstd{=}\hlnum{FALSE}\hlstd{,} \hlkwc{cutoff}\hlstd{=}\hlnum{16}\hlstd{)}
+\hlstd{bb} \hlkwb{=} \hlkwd{betweenness}\hlstd{(tree_g,} \hlkwc{v}\hlstd{=}\hlkwd{V}\hlstd{(tree_g),} \hlkwc{directed}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\hlstd{top} \hlkwb{=} \hlkwd{V}\hlstd{(tree_g)}\hlopt{$}\hlstd{label[}\hlkwd{order}\hlstd{(bb,} \hlkwc{decreasing}\hlstd{=}\hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{20}\hlstd{]]}
+\hlkwd{intersect}\hlstd{(top, sb_winners)}
 \end{alltt}
+\begin{verbatim}
+## [1] "George Seifert" "Tom Coughlin"   "Bill Cowher"    "Mike Shanahan" 
+## [5] "Pete Carroll"   "Mike Holmgren"
+\end{verbatim}
 \end{kframe}
 \end{knitrout}
+
+There are 6 super-bowl-winning coaches in the top 20.  Since there are 427
+coaches in the graph and 23 Super Bowl winners, this is a promising result.
 
 \subsection{Closeness}
 
+Another measure of centrality is closeness, which represents the distance to
+other nodes in the network.  The following snippet applies the closeness
+calculation.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{cc} \hlkwb{=} \hlkwd{closeness}\hlstd{(tree_g,} \hlkwc{v}\hlstd{=}\hlkwd{V}\hlstd{(tree_g),} \hlkwc{mode}\hlstd{=}\hlstr{"out"}\hlstd{)}
+\hlstd{top} \hlkwb{=} \hlkwd{V}\hlstd{(tree_g)}\hlopt{$}\hlstd{label[}\hlkwd{order}\hlstd{(cc,} \hlkwc{decreasing}\hlstd{=}\hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{20}\hlstd{]]}
+\hlkwd{intersect}\hlstd{(top, sb_winners)}
+\end{alltt}
+\begin{verbatim}
+## [1] "Bill Cowher"    "Mike Holmgren"  "George Seifert" "Mike Shanahan"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The result is 4 Super Bowl winners in the top 20, better than chance, but not
+as strong as degree.
+
+\subsection{Page Rank}
+
+Page Rank is an algorithm developed at Google for ranking web pages based on
+hyperlink structure \cite{pagerank}.  Each page's rank is based on the rank of
+the pages that link to it.  This algorithm may help identify successful and
+influential coaches in a way that other centrality measures don't.  Page Rank
+is calculated in R as follows:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{pr}  \hlkwb{=} \hlkwd{page.rank}\hlstd{(tree_g)}\hlopt{$}\hlstd{vector}
+\hlstd{top} \hlkwb{=} \hlkwd{V}\hlstd{(tree_g)}\hlopt{$}\hlstd{label[}\hlkwd{order}\hlstd{(pr,} \hlkwc{decreasing}\hlstd{=}\hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{20}\hlstd{]]}
+\hlkwd{intersect}\hlstd{(top, sb_winners)}
+\end{alltt}
+\begin{verbatim}
+## [1] "Tom Coughlin"   "Pete Carroll"   "Mike Shanahan"  "Bill Belichick"
+## [5] "Mike Holmgren"  "George Seifert"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+Again we find 6 Super Bowl winners in the top 20, indicating page rank is
+reflective of coaching success.
+
+\subsection{Kleinburg Authority/Hub}
+
+Kleinberg's authority score is also based on web page hyperlinks
+\cite{authority}.  Like Page Rank, it may be a more accurate centrality measure
+that more crude measures.  It is calculated in R as follows:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{as} \hlkwb{=} \hlkwd{authority.score}\hlstd{(tree_g)}\hlopt{$}\hlstd{vector}
+\hlstd{top} \hlkwb{=} \hlkwd{V}\hlstd{(tree_g)}\hlopt{$}\hlstd{label[}\hlkwd{order}\hlstd{(as,} \hlkwc{decreasing}\hlstd{=}\hlnum{TRUE}\hlstd{)[}\hlnum{1}\hlopt{:}\hlnum{20}\hlstd{]]}
+\hlkwd{intersect}\hlstd{(top, sb_winners)}
+\end{alltt}
+\begin{verbatim}
+## [1] "Mike Shanahan"  "Mike Holmgren"  "Bill Cowher"    "George Seifert"
+## [5] "Mike McCarthy"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The top 20 nodes by Kleinberg authority score include only 5 Super Bowl winners.
+
 \section{Community Structure}
 
+In addition to centrality, the community structure of the NFL coaches network
+may reflect intuitions around coaching 'families'.  
+
+% cliques
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{clq} \hlkwb{=} \hlkwd{largest.cliques}\hlstd{(}\hlkwd{as.undirected}\hlstd{(peer_g))}
+\hlkwd{V}\hlstd{(peer_g)}\hlopt{$}\hlstd{label[clq[[}\hlnum{1}\hlstd{]]]}
+\end{alltt}
+\begin{verbatim}
+## [1] "Mike Pettine"         "Rex Ryan"             "Brian Schottenheimer"
+## [4] "Dennis Thurman"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+First we consider k-cores:
+
 % k-core
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{cn} \hlkwb{=} \hlkwd{graph.coreness}\hlstd{(}\hlkwd{as.undirected}\hlstd{(peer_g))}
+\hlstd{cn[}\hlkwd{which.max}\hlstd{(cn)]}
+\end{alltt}
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+\begin{alltt}
+\hlkwd{length}\hlstd{(cn[cn} \hlopt{==} \hlnum{5}\hlstd{])}
+\end{alltt}
+\begin{verbatim}
+## [1] 116
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 
-% fastgreedy
-
-\section{Small World Network Properties}
-
-% cluster coeffient
-
-% Avg shortest path
+The largest k-core is only 5 nodes, though 116 nodes belong to a 5-core.
 
 \section{Conclusion}
 
 This report analyzed the social network of NFL coaches serving as head coach or
-coorindator in the years 1980-2013.
+coordinator in the years 1980-2013.  The two primary questions answered were
+regarding the alignment of centrality measures with coaching success and the
+existence of communities revolving around particular coaching styles and/or
+philosophies.
+
+With respect to centrality, this report finds that multiple centrality measures
+were well-aligned with coaching success.  In the tree model, for both
+betweenness and page rank, the top 20 vertices contained 6 super-bowl-winning
+coaches.  This should not be surprising since winning coaches will tend to
+coach for a long time and have their assistants hired away for other jobs,
+leading to more edges.
+
+With respect to communities, the results were less clear XXX.
 
 The content used to generate this report can be found at \cite{project}.
 
@@ -280,6 +475,10 @@ The content used to generate this report can be found at \cite{project}.
 \bibitem{scraper} \url{https://github.com/ndire/pfr-scraper}
 
 \bibitem{project} \url{https://github.com/ndire/sna-nfl-coaches}
+
+\bibitem{pagerank} Sergey Brin and Larry Page: The Anatomy of a Large-Scale Hypertextual Web Search Engine. Proceedings of the 7th World-Wide Web Conference, Brisbane, Australia, April 1998.
+
+\bibitem{authority} J. Kleinberg. Authoritative sources in a hyperlinked environment. Proc. 9th ACM-SIAM Symposium on Discrete Algorithms, 1998. Extended version in Journal of the ACM 46(1999). Also appears as IBM Research Report RJ 10076, May 1997.
 
 \end{thebibliography}
 

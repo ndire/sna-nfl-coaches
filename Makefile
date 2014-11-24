@@ -13,4 +13,4 @@ clean:
 	rm *.tmp *.pdf
 
 spell:
-	ispell -p ispell.dict $(latexfile).tex
+	aspell -c -p ispell.dict $(latexfile).tex
