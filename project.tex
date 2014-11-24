@@ -90,18 +90,18 @@
 \section{Introduction}
 
 Coaching in the United States' National Football League is a high stakes
-business.  NFL coaches dominate the top paid coaches in U.S. sports
+business.  NFL coaches domainate the top paid coaches in U.S. sports
 \cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per
-year.
+year.  In addition, there is relatively high turnover, with many of the 32 head
+coaches being fired each year.
 
 The group of NFL coaches is a relatively tight circle.  Head coaches are often
-hired from the pool of offensive and defensive coordinators.  
-
-The There is general perception that influential coaches pass on their
-knowledge to assistants, who then become successful head coaches themselves.
-This is typically associated with a particular philosophy, such as the ``west
-coast offense'' or the 3-4 defense.  Figure \ref{fig-bill-walsh} shows the
-coaching family tree for Bill Walsh, a successful coach from the 1980s.
+hired from the pool of offensive and defensive coordinators.  There is a
+general perception that influential coaches pass on their knowledge to
+assistants, who then become successful head coaches themselves.  This is
+typically associated wiht a particular philosophy, such as the ``west coast
+offense'' or the 3-4 defense.  Figure \ref{fig-bill-walsh} shows the coaching
+family tree for Bill Walsh, a successful coach from the 1980s.
 
 \begin{figure}
 \begin{center}
@@ -144,7 +144,7 @@ approach attempts to model the influence of successful coaches through the
 success of their assistants.  Edges are between the head coach and the
 coordinators; coordinators have no connection to each other.  This model will
 be referred to as the \emph{tree} model.  The tree model is used for centrality
-measures since this report is looking for the centrality successful
+measures since this report is looking for the centrality successfull
 \emph{head} coaches.  The file is {\tt coaches\_tree.gml}.
 
 \item The second model considers each member of the staff to be connected with
@@ -173,7 +173,7 @@ evaluation metric is subjective based on the infographic in figure
 
 \subsection{Limitations}
 
-There are several important limitations of this analysis:
+There are several important limitations of this anlaysis:
 
 \begin{itemize}
 
@@ -250,20 +250,20 @@ in figure \ref{fig:tree-prop}.
 \hlstd{peer_deg} \hlkwb{=} \hlkwd{degree.distribution}\hlstd{(tree_g,} \hlkwc{cumulative} \hlstd{=} \hlnum{TRUE}\hlstd{)}
 \hlkwd{plot}\hlstd{(peer_deg,}\hlkwc{log}\hlstd{=}\hlstr{"xy"}\hlstd{,}\hlkwc{xlab}\hlstd{=}\hlstr{"degree k"}\hlstd{,}\hlkwc{ylab}\hlstd{=}\hlstr{"P(x) >= k"}\hlstd{,}\hlkwc{cex}\hlstd{=}\hlnum{0.5}\hlstd{)}
 \end{alltt}
-\end{kframe}
+\end{kframe}\begin{figure}
 
 {\centering \includegraphics[width=\maxwidth]{figure/peer-prop-1} 
 
 }
 
+\caption[Cumulative degree distribution for peer model]{Cumulative degree distribution for peer model\label{fig:peer-prop}}
+\end{figure}
 
 
 \end{knitrout}
 
-XXX
-
 A Fruchterman-Reingold layout of the tree graph is show in figure
-\ref{fig:graph-plot}.  There graph appears tightly clustered in general, without
+\ref{fig:graph-plot}.  There graph appears tighly clustered in general, without
 an obvious community structure.
 
 \begin{knitrout}
@@ -313,7 +313,7 @@ There are 7 Super Bowl winners in the top 20 nodes by degree centrality.
 
 \subsection{Betweenness}
 
-The first measure of centrality to be evaluated is betweenness, which measures
+The first measure of centrality to be evaluated is betweeness, which measures
 how many shortest paths traverse the node.  The following snippet calculates
 betweenness for all nodes in the tree model and selects the 20 nodes with the
 top betweenness.  
@@ -422,7 +422,7 @@ may reflect intuitions around coaching 'families'.
 \end{kframe}
 \end{knitrout}
 
-First we consider k-cores:
+The largest clique has only 4 members.  A less restrictive definition of community is k-cores:
 
 % k-core
 \begin{knitrout}
@@ -443,24 +443,33 @@ First we consider k-cores:
 \end{kframe}
 \end{knitrout}
 
-The largest k-core is only 5 nodes, though 116 nodes belong to a 5-core.
+The largest k-core is only 5 nodes, though 116 nodes belong to a 5-core.  It
+appears that coaches shuffle enough that it is difficult to identify communities.  This mirrors the appearance of the graph in figure \ref{fig:graph-plot}
 
 \section{Conclusion}
 
 This report analyzed the social network of NFL coaches serving as head coach or
-coordinator in the years 1980-2013.  The two primary questions answered were
+coorindator in the years 1980-2013.  The two primary questions answered were
 regarding the alignment of centrality measures with coaching success and the
 existence of communities revolving around particular coaching styles and/or
 philosophies.
 
 With respect to centrality, this report finds that multiple centrality measures
-were well-aligned with coaching success.  In the tree model, for both
-betweenness and page rank, the top 20 vertices contained 6 super-bowl-winning
-coaches.  This should not be surprising since winning coaches will tend to
-coach for a long time and have their assistants hired away for other jobs,
-leading to more edges.
+were well-aligned with coaching success.  In the tree model, the top 20 nodes
+by degree centrality contained 7 Super Bowl winning coaches.  In addition, for
+both betweenness and page rank, the top 20 vertices contained 6
+super-bowl-winning coaches.  This should not be surprising since winning
+coaches will tend to have a long career and have their assistants hired away
+for other jobs, leading to more edges.  We haven't gained much insight here;
+future work should include a full correlation measure between centrality and a
+more complete metric like winning percentage, as well as normalizing by career
+length.
 
-With respect to communities, the results were less clear XXX.
+With respect to communities, the results were less clear.  The visual graph and
+the k-core measure did not show a significant presence of communities.  This
+part of the analysis might be improved by including more assistant coaches and
+characterizing head coaches as offensive or defensive based on their previous
+coordinator positions.
 
 The content used to generate this report can be found at \cite{project}.
 

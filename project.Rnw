@@ -70,16 +70,16 @@ sb_winners = c(
 Coaching in the United States' National Football League is a high stakes
 business.  NFL coaches domainate the top paid coaches in U.S. sports
 \cite{forbes-pay}.  The best coaches are paid in excess of \$7 million per
-year.
+year.  In addition, there is relatively high turnover, with many of the 32 head
+coaches being fired each year.
 
 The group of NFL coaches is a relatively tight circle.  Head coaches are often
-hired from the pool of offensive and defensive coordinators.  
-
-The There is general perception that influential coaches pass on their
-knowledge to assistants, who then become successful head coaches themselves.
-This is typically associated wiht a particular philosophy, such as the ``west
-coast offense'' or the 3-4 defense.  Figure \ref{fig-bill-walsh} shows the
-coaching family tree for Bill Walsh, a successful coach from the 1980s.
+hired from the pool of offensive and defensive coordinators.  There is a
+general perception that influential coaches pass on their knowledge to
+assistants, who then become successful head coaches themselves.  This is
+typically associated wiht a particular philosophy, such as the ``west coast
+offense'' or the 3-4 defense.  Figure \ref{fig-bill-walsh} shows the coaching
+family tree for Bill Walsh, a successful coach from the 1980s.
 
 \begin{figure}
 \begin{center}
